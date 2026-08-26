@@ -12,15 +12,19 @@
 </template>
 <script setup lang="ts">
 import { computed, nextTick, onBeforeUnmount, onMounted, ref } from 'vue'
+import { useRouter } from 'vue-router'
 import { Application, Container, Graphics, Text, TextStyle } from 'pixi.js'
+import { usePlayerStore } from '@/stores/player'
 
-const playerName = ref('')
-const isPlaying = ref(false)
+const router = useRouter()
+const playerStore = usePlayerStore()
+const playerName = computed(() => playerStore.name)
+const emit = defineEmits<{ leave: [] }>()
 const gameHost = ref<HTMLDivElement | null>(null)
 const hp = ref(100)
 const maxHp = 100
-const level = ref(1)
-const experience = ref(0)
+const level = computed(() => playerStore.level)
+const experience = computed(() => playerStore.experience)
 const nextLevelExperience = computed(() => level.value * 30)
 const enemyHp = ref(60)
 const status = ref('荒野很安静。')
@@ -37,30 +41,25 @@ let animationFrame = 0
 
 
 
-function persistState() { emit('progress', level.value, experience.value) }
+function persistState() { playerStore.addExperience(0) }
 
 function addExperience(amount: number) {
-  experience.value += amount
-  while (experience.value >= nextLevelExperience.value) {
-    experience.value -= nextLevelExperience.value
-    level.value += 1
-    hp.value = maxHp
-    status.value = `你升到了 ${level.value} 级。`
-  }
-  persistState()
+  playerStore.addExperience(amount)
+  status.value = `获得 ${amount} 点经验。`
 }
 
 function createMap(root: Container) {
   const ground = new Graphics()
   ground.rect(0, 0, 960, 640).fill('#a8d59a')
 
+  const grass = new Container()
   for (let x = 24; x < 960; x += 48) {
     for (let y = 24; y < 640; y += 48) {
       const mark = new Graphics()
       mark.circle(0, 0, 1.5).fill('#d5efbb')
       mark.x = x + ((y / 48) % 2) * 9
       mark.y = y
-      ground.addChild(mark)
+      grass.addChild(mark)
     }
   }
 
@@ -79,7 +78,7 @@ function createMap(root: Container) {
   title.x = 22
   title.y = 22
 
-  root.addChild(ground, water, path, title)
+  root.addChild(ground, grass, water, path, title)
 }
 
 function createPlayer(root: Container) {
@@ -196,9 +195,7 @@ function onCanvasClick(event: MouseEvent) {
 
 async function initializeGame() {
   if (!playerName.value.trim()) return
-  playerName.value = playerName.value.trim().slice(0, 12)
   persistState()
-  isPlaying.value = true
   await nextTick()
 
   app = new Application()
@@ -218,8 +215,8 @@ async function initializeGame() {
 }
 
 function leaveGame() {
-  isPlaying.value = false
   cleanupGame()
+  router.push('/login')
 }
 
 function cleanupGame() {
@@ -245,3 +242,13 @@ onBeforeUnmount(cleanupGame)
 .hud { display: grid; align-content: start; gap: 10px; padding: 12px; border-left: 1px solid #c7d8c9; color: #4d6755; span { font-size: 13px; } .leave { border-color: #a7c4ad; background: transparent; color: #4d6755; } }
 .action { height: 40px; padding: 0 12px; border: 1px solid #efcf86; border-radius: 3px; background: #d8b45a; color: #23382a; text-align: center; line-height: 38px; cursor: pointer; &.disabled { cursor: not-allowed; opacity: .5; pointer-events: none; } }
 </style>
+
+
+
+
+
+
+
+
+
+
