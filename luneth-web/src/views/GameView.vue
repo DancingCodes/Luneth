@@ -1,7 +1,5 @@
 <template>
-  <div class="game">
-    <div ref="gameHost" class="canvas"></div>
-  </div>
+  <div ref="gameHost"></div>
 </template>
 
 <script setup lang="ts">
@@ -38,19 +36,3 @@ function cleanupGame() {
 onMounted(initializeGame)
 onBeforeUnmount(cleanupGame)
 </script>
-
-<style lang="scss">
-.game {
-  width: 960px;
-  margin: 24px auto 0;
-
-  .canvas {
-    width: 960px;
-    height: 640px;
-    border: 1px solid #9bbca0;
-    background: #dcefd6;
-
-    .game-canvas { display: block; }
-  }
-}
-</style>
