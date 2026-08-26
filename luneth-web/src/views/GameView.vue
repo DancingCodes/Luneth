@@ -236,19 +236,60 @@ onBeforeUnmount(cleanupGame)
 
 </script>
 <style lang="scss">
-.game { width: 1200px; margin: 0 auto; padding-top: 24px; display: grid; grid-template-columns: 960px 200px; gap: 20px; }
-.canvas { width: 960px; height: 640px; border: 1px solid #9bbca0; background: #dcefd6; }
-.game-canvas { display: block; }
-.hud { display: grid; align-content: start; gap: 10px; padding: 12px; border-left: 1px solid #c7d8c9; color: #4d6755; span { font-size: 13px; } .leave { border-color: #a7c4ad; background: transparent; color: #4d6755; } }
-.action { height: 40px; padding: 0 12px; border: 1px solid #efcf86; border-radius: 3px; background: #d8b45a; color: #23382a; text-align: center; line-height: 38px; cursor: pointer; &.disabled { cursor: not-allowed; opacity: .5; pointer-events: none; } }
+.game {
+  width: 1200px;
+  margin: 0 auto;
+  padding-top: 24px;
+  display: grid;
+  grid-template-columns: 960px 200px;
+  gap: 20px;
+
+  .canvas {
+    width: 960px;
+    height: 640px;
+    border: 1px solid #9bbca0;
+    background: #dcefd6;
+
+    .game-canvas {
+      display: block;
+    }
+  }
+
+  .hud {
+    display: grid;
+    align-content: start;
+    gap: 10px;
+    padding: 12px;
+    border-left: 1px solid #c7d8c9;
+    color: #4d6755;
+
+    span {
+      font-size: 13px;
+    }
+
+    .action {
+      height: 40px;
+      padding: 0 12px;
+      border: 1px solid #efcf86;
+      border-radius: 3px;
+      background: #d8b45a;
+      color: #23382a;
+      text-align: center;
+      line-height: 38px;
+      cursor: pointer;
+
+      &.disabled {
+        cursor: not-allowed;
+        opacity: .5;
+        pointer-events: none;
+      }
+
+      &.leave {
+        border-color: #a7c4ad;
+        background: transparent;
+        color: #4d6755;
+      }
+    }
+  }
+}
 </style>
-
-
-
-
-
-
-
-
-
-
